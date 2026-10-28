@@ -1,0 +1,16 @@
+name = "ssh"
+version = "0.1.0"
+defaultTargets = ["Ssh", "Proofs", "ssh"]
+
+[[lean_lib]]
+name = "Ssh"
+
+[[lean_lib]]
+name = "Proofs"
+
+[[lean_lib]]
+name = "Spec"
+
+[[lean_exe]]
+name = "ssh"
+root = "Main"
