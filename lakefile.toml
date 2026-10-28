@@ -8,6 +8,9 @@ name = "Ssh"
 [[lean_lib]]
 name = "Proofs"
 
+[[lean_lib]]
+name = "Spec"
+
 [[lean_exe]]
 name = "ssh"
 root = "Main"

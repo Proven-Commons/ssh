@@ -1,0 +1,57 @@
+# Read by bar/check.py in Proven-Commons/mission.
+# See playbook/verified-bar.md there for what each field means.
+
+[project]
+name = "ssh"
+# "in-progress" until every bar item passes, then "verified".
+status = "in-progress"
+page = "README.md"
+# GitHub handles of everyone who wrote the specification.
+spec_authors = ["abu-aska"]
+# The program people run. A change to it voids the approval.
+entry_points = ["Main.lean"]
+
+[spec]
+files = ["SPEC.md", "Spec.lean"]
+# The code under proof: the functions the statements are about.
+code = [
+  # The byte forms of numbers, and the small writers.
+  "Ssh.magOf", "Ssh.writeBE",
+  "Ssh.bytesOfNatGo", "Ssh.bytesOfNat",
+  "Ssh.writeByte", "Ssh.writeBool", "Ssh.writeUInt32", "Ssh.writeUInt64",
+  # Strings.
+  "Ssh.writeString",
+  # Name-lists: the name rule, the joined content, the writer.
+  "Ssh.nameByteOk", "Ssh.validName", "Ssh.namesContent", "Ssh.writeNames",
+  # The mpint encodings and writer.
+  "Ssh.complByte", "Ssh.mpintNatFromBytes", "Ssh.mpintBytesOfNat",
+  "Ssh.mpintNegFromBytes", "Ssh.mpintBytesOfNeg", "Ssh.mpintBytes",
+  "Ssh.writeMpint",
+  # Key blobs: the algorithm names, the type and its constructors,
+  # well formedness, and the writer.
+  "Ssh.strBytes", "Ssh.algEd25519", "Ssh.algRsa",
+  "Ssh.KeyBlob", "Ssh.KeyBlob.ed25519", "Ssh.KeyBlob.rsa",
+  "Ssh.blobWF", "Ssh.writeBlob",
+  # The readers of the small types and of strings.
+  "Ssh.readBytes", "Ssh.readByte", "Ssh.readBool", "Ssh.readNatField",
+  "Ssh.readUInt32", "Ssh.readUInt64", "Ssh.readString",
+  # The name-list readers.
+  "Ssh.consName", "Ssh.splitComma", "Ssh.parseNames", "Ssh.readNames",
+  # The mpint readers: the minimal form check and the value.
+  "Ssh.mpintMinimal", "Ssh.mpintValue", "Ssh.readMpint",
+  # The blob reader, and the whole field readers the tool calls.
+  "Ssh.readBlob",
+  "Ssh.parseStringField", "Ssh.parseNamesField", "Ssh.parseMpintField",
+]
+
+# One entry per approval, added in a pull request the reviewer approves.
+# [[spec.approval]]
+# reviewer = "github-handle"
+# date = "2026-11-02"
+# sha256 = "..."
+# record = "https://github.com/Proven-Commons/ssh/pull/<n>"
+
+[tests]
+results = "tests/TEST-RESULTS.md"
+command = "python3 tests/run_tests.py"
+files = ["tests/run_tests.py"]

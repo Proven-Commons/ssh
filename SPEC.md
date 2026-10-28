@@ -163,3 +163,52 @@ The operations:
 The answer bytes are printed in the same decimal comma form as
 the payload. In every operation the input must be consumed
 exactly: trailing bytes turn the answer to `none`.
+
+## Properties and their theorems
+
+Each property a reader can check in the page (`README.md`)
+names its theorem. The theorems are stated in `Spec.lean`
+and proved in `Proofs/SpecProofs.lean`. The refusal theorems
+are single inputs, one for each named rejection case in the
+test harness; the tests in `tests/` cover each rule on many
+more inputs.
+
+| Property | Theorem |
+|----------|---------|
+| Reading a written byte gives the byte and the rest back | `Spec.readByte_writeByte` |
+| Reading a written boolean gives the boolean and the rest back | `Spec.readBool_writeBool` |
+| Reading a written uint32 gives the number back, below 2^32 | `Spec.readUInt32_writeUInt32` |
+| Reading a written uint64 gives the number back, below 2^64 | `Spec.readUInt64_writeUInt64` |
+| Reading a written string gives the content back, for content shorter than 2^32 bytes | `Spec.readString_writeString` |
+| Reading a written name-list gives the list back, when every name follows the name rule and the joined content is shorter than 2^32 bytes | `Spec.readNames_writeNames` |
+| The value of the mpint writer's content is the integer itself, for every integer | `Spec.mpintValue_mpintBytes` |
+| The mpint writer's content always passes the minimal form check, for every integer | `Spec.mpintMinimal_mpintBytes` |
+| Reading a written mpint field gives the integer back, when the content is shorter than 2^32 bytes | `Spec.readMpint_writeMpint` |
+| Reading a written key blob gives the blob back, for every well formed blob | `Spec.readBlob_writeBlob` |
+| Zero is written as the empty content | `Spec.mpint_zero_write` |
+| Reading the zero field gives zero | `Spec.mpint_zero_read` |
+| The RFC's large positive example, written as the RFC prints it | `Spec.mpint_big_write` |
+| The RFC's large positive example, read | `Spec.mpint_big_read` |
+| The value 0x80 is written with a leading zero byte | `Spec.mpint_80_write` |
+| Reading the 0x80 field gives 0x80 | `Spec.mpint_80_read` |
+| The RFC's small negative example, written | `Spec.mpint_neg_small_write` |
+| The RFC's small negative example, read | `Spec.mpint_neg_small_read` |
+| The RFC's large negative example, written | `Spec.mpint_neg_big_write` |
+| The RFC's large negative example, read | `Spec.mpint_neg_big_read` |
+| A read of the byte 7 as a boolean gives true | `Spec.bool_seven_reads_true` |
+| True writes as the byte 1 | `Spec.bool_true_writes_one` |
+| A string field holding "hi" reads back as "hi" | `Spec.string_round` |
+| A name-list field holding "a" and "bc" reads back as those names | `Spec.names_round` |
+| The empty string content is the empty list of names | `Spec.names_empty` |
+| An ed25519 blob with a fixed pattern key, written and read back | `Spec.blob_ed25519_round` |
+| A small RSA blob (modulus 3233, exponent 17), written and read back | `Spec.blob_rsa_round` |
+| A lone zero byte as mpint content is refused | `Spec.mpint_lone_zero_rejected` |
+| An mpint content with a droppable leading zero byte is refused | `Spec.mpint_extra_zero_rejected` |
+| An mpint content with a droppable leading 255 byte is refused | `Spec.mpint_extra_ff_rejected` |
+| An mpint field cut short by its length is refused | `Spec.mpint_truncated_rejected` |
+| A string field whose length runs past the input is refused | `Spec.string_length_overrun_rejected` |
+| A name holding a byte outside the name rule is refused | `Spec.names_bad_byte_rejected` |
+| A name-list whose content is a single comma is refused | `Spec.names_comma_rejected` |
+| An ed25519 key string of 31 bytes is refused | `Spec.blob_ed25519_short_key_rejected` |
+| A blob whose key length runs past the input is refused | `Spec.blob_length_overrun_rejected` |
+| A blob naming an unread algorithm is refused | `Spec.blob_unknown_alg_rejected` |
